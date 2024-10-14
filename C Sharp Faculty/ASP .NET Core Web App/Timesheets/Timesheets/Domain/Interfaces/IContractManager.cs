@@ -11,5 +11,5 @@ public interface IContractManager
 
     Task<Guid> Create(SheetCreateRequest sheet);
 
-    Task<bool> CheckContractIsActive(Guid id);
+    Task<bool?> CheckContractIsActive(Guid id);
 }

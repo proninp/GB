@@ -1,4 +1,5 @@
-﻿using Timesheets.Data.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Timesheets.Data.Interfaces;
 using Timesheets.Models;
 
 namespace Timesheets.Data.Implementation;
@@ -17,9 +18,11 @@ public class ContractRepo : IContractRepo
         throw new NotImplementedException();
     }
 
-    public async Task<bool> CheckContractIsActive(Guid id)
+    public async Task<bool?> CheckContractIsActive(Guid id)
     {
-        var contract = await _context.Contracts.FindAsync(id);
+        var contract = await _context.Contracts.FirstOrDefaultAsync(x => x.Id == id);
+        if (contract is null)
+            return null;
         var now = DateTime.Now;
         var isActive = now <= contract?.DateEnd && now >= contract?.DateStart;
         return isActive;

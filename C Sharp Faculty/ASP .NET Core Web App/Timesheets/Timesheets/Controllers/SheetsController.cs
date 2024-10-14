@@ -40,7 +40,9 @@ public class SheetsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] SheetCreateRequest sheetDto)
     {
         var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheetDto.ContractId);
-        if (!isAllowedToCreate)
+        if (!isAllowedToCreate.HasValue)
+            return NotFound($"Contract with id: {sheetDto.ContractId} was not found");
+        if(!isAllowedToCreate.Value)
             return BadRequest($"Contract '{sheetDto.ContractId}' is not active.");
         
         var id = await _sheetManager.Create(sheetDto);
