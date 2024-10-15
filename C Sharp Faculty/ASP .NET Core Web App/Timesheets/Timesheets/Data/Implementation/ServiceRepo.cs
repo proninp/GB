@@ -20,7 +20,7 @@ public class ServiceRepo : IServiceRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update()
+    public async Task Update(Service item)
     {
         throw new NotImplementedException();
     }

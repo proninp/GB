@@ -20,7 +20,7 @@ public class UserRepo : IUserRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update()
+    public async Task Update(User item)
     {
         throw new NotImplementedException();
     }

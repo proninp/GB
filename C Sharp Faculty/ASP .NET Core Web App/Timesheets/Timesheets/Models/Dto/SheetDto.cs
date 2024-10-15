@@ -1,6 +1,6 @@
 ﻿namespace Timesheets.Models.Dto;
 
-public class SheetCreateRequest
+public class SheetDto
 {
     public DateTime Date { get; set; }
 

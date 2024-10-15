@@ -35,8 +35,9 @@ public class SheetRepo : ISheetRepo
             .ToListAsync();
     }
 
-    public Task Update()
+    public async Task Update(Sheet item)
     {
-        throw new NotImplementedException();
+        _context.Sheets.Update(item);
+        await _context.SaveChangesAsync();
     }
 }

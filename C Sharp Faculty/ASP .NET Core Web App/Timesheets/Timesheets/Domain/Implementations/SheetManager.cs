@@ -14,7 +14,7 @@ public class SheetManager : ISheetManager
         _sheetRepo = sheetRepo;
     }
 
-    public async Task<Guid> Create(SheetCreateRequest sheetDto)
+    public async Task<Guid> Create(SheetDto sheetDto)
     {
         var sheet = new Sheet
         {
@@ -37,5 +37,19 @@ public class SheetManager : ISheetManager
     public async Task<IEnumerable<Sheet>?> GetItems()
     {
         return await _sheetRepo.GetItems();
+    }
+
+    public async Task Update(Guid id, SheetDto sheetDto)
+    {
+        var sheet = new Sheet
+        {
+            Id = id,
+            Date = sheetDto.Date,
+            ContractId = sheetDto.ContractId,
+            EmployeeId = sheetDto.EmployeeId,
+            ServiceId = sheetDto.ServiceId,
+            Amount = sheetDto.Amount
+        };
+        await _sheetRepo.Update(sheet);
     }
 }

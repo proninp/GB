@@ -20,7 +20,7 @@ public class ClientRepo : IClientRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update()
+    public async Task Update(Client item)
     {
         throw new NotImplementedException();
     }

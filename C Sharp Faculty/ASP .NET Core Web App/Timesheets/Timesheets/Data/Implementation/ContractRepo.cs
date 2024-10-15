@@ -38,7 +38,7 @@ public class ContractRepo : IContractRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update()
+    public async Task Update(Contract item)
     {
         throw new NotImplementedException();
     }

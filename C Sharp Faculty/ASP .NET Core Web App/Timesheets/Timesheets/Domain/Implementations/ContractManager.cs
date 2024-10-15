@@ -19,7 +19,7 @@ public class ContractManager : IContractManager
         return await _conractRepo.CheckContractIsActive(id);
     }
 
-    public Task<Guid> Create(SheetCreateRequest sheet)
+    public Task<Guid> Create(SheetDto sheet)
     {
         throw new NotImplementedException();
     }

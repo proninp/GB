@@ -20,7 +20,7 @@ public class EmployeeRepo : IEmployeeRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update()
+    public async Task Update(Employee item)
     {
         throw new NotImplementedException();
     }

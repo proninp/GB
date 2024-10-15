@@ -8,5 +8,5 @@ public interface IRepository<T>
 
     Task Add(T item);
 
-    Task Update();
+    Task Update(T item);
 }

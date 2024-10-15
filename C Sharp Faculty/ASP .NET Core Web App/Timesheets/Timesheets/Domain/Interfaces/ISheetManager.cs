@@ -10,5 +10,7 @@ public interface ISheetManager
 
     Task<IEnumerable<Sheet>> GetItems();
 
-    Task<Guid> Create(SheetCreateRequest sheet);
+    Task<Guid> Create(SheetDto sheet);
+
+    Task Update(Guid id, SheetDto sheetDto);
 }

@@ -9,7 +9,7 @@ public interface IContractManager
 
     Task<IEnumerable<Sheet>> GetItems();
 
-    Task<Guid> Create(SheetCreateRequest sheet);
+    Task<Guid> Create(SheetDto sheet);
 
     Task<bool?> CheckContractIsActive(Guid id);
 }

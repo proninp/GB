@@ -37,7 +37,7 @@ public class SheetsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] SheetCreateRequest sheetDto)
+    public async Task<IActionResult> Create([FromBody] SheetDto sheetDto)
     {
         var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheetDto.ContractId);
         if (!isAllowedToCreate.HasValue)
@@ -47,5 +47,19 @@ public class SheetsController : ControllerBase
         
         var id = await _sheetManager.Create(sheetDto);
         return Ok(id);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SheetDto sheetDto)
+    {
+        var isAllowedToUpdate = await _contractManager.CheckContractIsActive(sheetDto.ContractId);
+        if (!isAllowedToUpdate.HasValue)
+            return NotFound($"Contract with id: {sheetDto.ContractId} was not found");
+        if (!isAllowedToUpdate.Value)
+            return BadRequest($"Contract '{sheetDto.ContractId}' is not active.");
+
+        await _sheetManager.Update(id, sheetDto);
+
+        return NoContent();
     }
 }
