@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Timesheets.Domain.Interfaces;
+using Timesheets.Domain.Abstractions;
+using Timesheets.Domain.InterAbstractionsfaces;
 using Timesheets.Models.Dto;
 
 namespace Timesheets.Controllers;
@@ -18,7 +19,7 @@ public class SheetsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> Get([FromRoute] Guid id)
     {
         var result = await _sheetManager.GetItem(id);
         if (result == null)
@@ -32,7 +33,7 @@ public class SheetsController : ControllerBase
         var result = await _sheetManager.GetItems();
         if (result == null)
             return NotFound();
-        
+
         return Ok(result);
     }
 
@@ -42,9 +43,9 @@ public class SheetsController : ControllerBase
         var isAllowedToCreate = await _contractManager.CheckContractIsActive(sheetDto.ContractId);
         if (!isAllowedToCreate.HasValue)
             return NotFound($"Contract with id: {sheetDto.ContractId} was not found");
-        if(!isAllowedToCreate.Value)
+        if (!isAllowedToCreate.Value)
             return BadRequest($"Contract '{sheetDto.ContractId}' is not active.");
-        
+
         var id = await _sheetManager.Create(sheetDto);
         return Ok(id);
     }
@@ -61,5 +62,14 @@ public class SheetsController : ControllerBase
         await _sheetManager.Update(id, sheetDto);
 
         return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    {
+        var result = await _sheetManager.Delete(id);
+        if (!result)
+            return NotFound();
+        return Ok();
     }
 }

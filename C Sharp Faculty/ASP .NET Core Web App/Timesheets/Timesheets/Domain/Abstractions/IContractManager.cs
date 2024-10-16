@@ -1,7 +1,7 @@
 ﻿using Timesheets.Models.Dto;
 using Timesheets.Models;
 
-namespace Timesheets.Domain.Interfaces;
+namespace Timesheets.Domain.Abstractions;
 
 public interface IContractManager
 {

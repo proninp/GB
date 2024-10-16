@@ -13,5 +13,7 @@ public class Contract
     
     public DateTime DateEnd { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public ICollection<Sheet> Sheets { get; set; }
 }

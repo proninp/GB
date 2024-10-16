@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Timesheets.Data;
-using Timesheets.Data.Implementation;
-using Timesheets.Data.Interfaces;
+using Timesheets.Data.Abstractions;
+using Timesheets.Data.Repositories;
+using Timesheets.Domain.Abstractions;
 using Timesheets.Domain.Implementations;
-using Timesheets.Domain.Interfaces;
-using Timesheets.Models;
+using Timesheets.Domain.InterAbstractionsfaces;
+using Timesheets.Domain.Services;
 using Timesheets.Options;
 
 var builder = WebApplication.CreateBuilder(args);

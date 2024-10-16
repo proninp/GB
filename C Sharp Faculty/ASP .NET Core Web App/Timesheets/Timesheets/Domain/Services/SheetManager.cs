@@ -1,5 +1,5 @@
-﻿using Timesheets.Data.Interfaces;
-using Timesheets.Domain.Interfaces;
+﻿using Timesheets.Data.Abstractions;
+using Timesheets.Domain.InterAbstractionsfaces;
 using Timesheets.Models;
 using Timesheets.Models.Dto;
 
@@ -39,7 +39,7 @@ public class SheetManager : ISheetManager
         return await _sheetRepo.GetItems();
     }
 
-    public async Task Update(Guid id, SheetDto sheetDto)
+    public async Task<bool> Update(Guid id, SheetDto sheetDto)
     {
         var sheet = new Sheet
         {
@@ -50,6 +50,9 @@ public class SheetManager : ISheetManager
             ServiceId = sheetDto.ServiceId,
             Amount = sheetDto.Amount
         };
-        await _sheetRepo.Update(sheet);
+        return await _sheetRepo.Update(sheet);
     }
+
+    public async Task<bool> Delete(Guid id) =>
+        await _sheetRepo.Delete(id);
 }

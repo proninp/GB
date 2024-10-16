@@ -1,4 +1,4 @@
-﻿namespace Timesheets.Data.Interfaces;
+﻿namespace Timesheets.Data.Abstractions;
 
 public interface IRepository<T>
 {
@@ -8,5 +8,7 @@ public interface IRepository<T>
 
     Task Add(T item);
 
-    Task Update(T item);
+    Task<bool> Update(T item);
+
+    Task<bool> Delete(Guid id);
 }

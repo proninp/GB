@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Timesheets.Data.Interfaces;
+using Timesheets.Data.Abstractions;
 using Timesheets.Models;
 
-namespace Timesheets.Data.Implementation;
+namespace Timesheets.Data.Repositories;
 
 public class SheetRepo : ISheetRepo
 {
@@ -35,9 +35,20 @@ public class SheetRepo : ISheetRepo
             .ToListAsync();
     }
 
-    public async Task Update(Sheet item)
+    public async Task<bool> Update(Sheet item)
     {
         _context.Sheets.Update(item);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var item = await _context.Sheets.FindAsync(id);
+        if (item is null)
+            return false;
+        _context.Sheets.Remove(item);
         await _context.SaveChangesAsync();
+        return true;
     }
 }

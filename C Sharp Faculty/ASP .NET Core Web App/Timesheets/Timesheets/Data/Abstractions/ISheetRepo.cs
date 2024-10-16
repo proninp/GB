@@ -1,7 +1,8 @@
 ﻿using Timesheets.Models;
 
-namespace Timesheets.Data.Interfaces;
+namespace Timesheets.Data.Abstractions;
 
 public interface ISheetRepo : IRepository<Sheet>
 {
+    
 }

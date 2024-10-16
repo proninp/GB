@@ -1,11 +1,16 @@
-﻿using Timesheets.Data.Interfaces;
+﻿using Timesheets.Data.Abstractions;
 using Timesheets.Models;
 
-namespace Timesheets.Data.Implementation;
+namespace Timesheets.Data.Repositories;
 
 public class EmployeeRepo : IEmployeeRepo
 {
     public async Task Add(Employee item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> Delete(Guid id)
     {
         throw new NotImplementedException();
     }
@@ -20,7 +25,7 @@ public class EmployeeRepo : IEmployeeRepo
         throw new NotImplementedException();
     }
 
-    public async Task Update(Employee item)
+    public async Task<bool> Update(Employee item)
     {
         throw new NotImplementedException();
     }
