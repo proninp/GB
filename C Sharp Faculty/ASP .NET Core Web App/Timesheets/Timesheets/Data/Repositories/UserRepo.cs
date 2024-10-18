@@ -1,4 +1,5 @@
-﻿using Timesheets.Data.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Timesheets.Data.Abstractions;
 using Timesheets.Models;
 
 namespace Timesheets.Data.Repositories;
@@ -12,28 +13,38 @@ public class UserRepo : IUserRepo
         _context = context;
     }
 
-    public async Task Add(User item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> Delete(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<User?> GetItem(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context
+            .Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task<IEnumerable<User>> GetItems()
+    public async Task<IEnumerable<User>?> GetItems()
     {
-        throw new NotImplementedException();
+        return await _context
+            .Users
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task Add(User item)
+    {
+        _context.Add(item);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> Update(User item)
     {
-        throw new NotImplementedException();
+        _context.Users.Update(item);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var result = await _context.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+        return result > 0;
     }
 }

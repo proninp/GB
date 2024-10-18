@@ -13,12 +13,6 @@ public class SheetRepo : ISheetRepo
         _context = context;
     }
 
-    public async Task Add(Sheet item)
-    {
-        _context.Add(item);
-        await _context.SaveChangesAsync();
-    }
-
     public async Task<Sheet?> GetItem(Guid id)
     {
         return await _context
@@ -35,6 +29,12 @@ public class SheetRepo : ISheetRepo
             .ToListAsync();
     }
 
+    public async Task Add(Sheet item)
+    {
+        _context.Add(item);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<bool> Update(Sheet item)
     {
         _context.Sheets.Update(item);
@@ -44,11 +44,7 @@ public class SheetRepo : ISheetRepo
 
     public async Task<bool> Delete(Guid id)
     {
-        var item = await _context.Sheets.FindAsync(id);
-        if (item is null)
-            return false;
-        _context.Sheets.Remove(item);
-        await _context.SaveChangesAsync();
-        return true;
+        var result = await _context.Sheets.Where(s => s.Id == id).ExecuteDeleteAsync();
+        return result > 0;
     }
 }
