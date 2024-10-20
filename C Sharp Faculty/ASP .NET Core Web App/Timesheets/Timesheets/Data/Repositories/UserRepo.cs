@@ -44,7 +44,7 @@ public class UserRepo : IUserRepo
 
     public async Task<bool> Delete(Guid id)
     {
-        var result = await _context.Users.Where(u => u.Id == id).ExecuteDeleteAsync();
+        var result = await _context.Users.Where(s => s.Id == id).ExecuteDeleteAsync();
         return result > 0;
     }
 }

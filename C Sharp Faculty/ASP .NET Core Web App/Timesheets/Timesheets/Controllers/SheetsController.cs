@@ -68,8 +68,10 @@ public class SheetsController : ControllerBase
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         var result = await _sheetManager.Delete(id);
-        if (!result)
+        if (result is null)
             return NotFound();
+        if (!result.Value)
+            return BadRequest($"Can not delete contract with id: {id}");
         return Ok();
     }
 }

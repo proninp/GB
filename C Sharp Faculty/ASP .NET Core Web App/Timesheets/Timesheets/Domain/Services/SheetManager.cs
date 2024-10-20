@@ -14,6 +14,16 @@ public class SheetManager : ISheetManager
         _sheetRepo = sheetRepo;
     }
 
+    public async Task<Sheet?> GetItem(Guid id)
+    {
+        return await _sheetRepo.GetItem(id);
+    }
+
+    public async Task<IEnumerable<Sheet>?> GetItems()
+    {
+        return await _sheetRepo.GetItems();
+    }
+
     public async Task<Guid> Create(SheetDto sheetDto)
     {
         var sheet = new Sheet
@@ -29,30 +39,27 @@ public class SheetManager : ISheetManager
         return sheet.Id;
     }
 
-    public async Task<Sheet?> GetItem(Guid id)
+    public async Task<bool?> Update(Guid id, SheetDto sheetDto)
     {
-        return await _sheetRepo.GetItem(id);
-    }
+        var sheet = await _sheetRepo.GetItem(id);
+        if (sheet is null)
+            return null;
 
-    public async Task<IEnumerable<Sheet>?> GetItems()
-    {
-        return await _sheetRepo.GetItems();
-    }
+        sheet.Date = sheetDto.Date;
+        sheet.ContractId = sheetDto.ContractId;
+        sheet.EmployeeId = sheetDto.EmployeeId;
+        sheet.ServiceId = sheetDto.ServiceId;
+        sheet.Amount = sheetDto.Amount;
 
-    public async Task<bool> Update(Guid id, SheetDto sheetDto)
-    {
-        var sheet = new Sheet
-        {
-            Id = id,
-            Date = sheetDto.Date,
-            ContractId = sheetDto.ContractId,
-            EmployeeId = sheetDto.EmployeeId,
-            ServiceId = sheetDto.ServiceId,
-            Amount = sheetDto.Amount
-        };
         return await _sheetRepo.Update(sheet);
     }
 
-    public async Task<bool> Delete(Guid id) =>
-        await _sheetRepo.Delete(id);
+    public async Task<bool?> Delete(Guid id)
+    {
+        var sheet = await _sheetRepo.GetItem(id);
+        if (sheet is null)
+            return null;
+
+        return await _sheetRepo.Delete(id);
+    }
 }

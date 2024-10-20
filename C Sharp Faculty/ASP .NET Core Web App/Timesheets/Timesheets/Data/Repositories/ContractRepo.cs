@@ -1,4 +1,5 @@
-﻿using Timesheets.Data.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Timesheets.Data.Abstractions;
 using Timesheets.Models;
 
 namespace Timesheets.Data.Repositories;
@@ -12,38 +13,38 @@ public class ContractRepo : IContractRepo
         _context = context;
     }
 
-    public async Task Add(Contract item)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<Contract?> GetItem(Guid id)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> Delete(Guid id)
-    {
-        throw new NotImplementedException();
+        return await _context
+            .Contracts
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task<IEnumerable<Contract>?> GetItems()
     {
-        throw new NotImplementedException();
+        return await _context
+            .Contracts
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task Add(Contract item)
+    {
+        _context.Add(item);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> Update(Contract item)
     {
-        throw new NotImplementedException();
+        _context.Contracts.Update(item);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
     }
 
-    public async Task<bool?> CheckContractIsActive(Guid id)
+    public async Task<bool> Delete(Guid id)
     {
-        var contract = await _context.Contracts.FindAsync(id);
-        if (contract is null)
-            return null;
-        var now = DateTime.Now;
-        var isActive = now <= contract?.DateEnd && now >= contract?.DateStart;
-        return isActive;
+        var result = await _context.Contracts.Where(c => c.Id == id).ExecuteDeleteAsync();
+        return result > 0;
     }
 }

@@ -21,7 +21,7 @@ public class EmployeeRepo : IEmployeeRepo
             .FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<IEnumerable<Employee>> GetItems()
+    public async Task<IEnumerable<Employee>?> GetItems()
     {
         return await _context
             .Employees
@@ -55,13 +55,7 @@ public class EmployeeRepo : IEmployeeRepo
 
     public async Task<bool> Delete(Guid id)
     {
-        var employee = await _context
-            .Employees
-            .FirstOrDefaultAsync(e => e.Id == id);
-        if (employee is null)
-            return false;
-
-        employee.IsDeleted = true;
-        return await _context.SaveChangesAsync() > 0;
+        var result = await _context.Employees.Where(s => s.Id == id).ExecuteDeleteAsync();
+        return result > 0;
     }
 }

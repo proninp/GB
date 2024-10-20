@@ -3,13 +3,7 @@ using Timesheets.Models;
 
 namespace Timesheets.Domain.Abstractions;
 
-public interface IContractManager
+public interface IContractManager : IManager<Contract, Guid, ContractDto>
 {
-    Task<Sheet?> GetItem(Guid id);
-
-    Task<IEnumerable<Sheet>> GetItems();
-
-    Task<Guid> Create(SheetDto sheet);
-
     Task<bool?> CheckContractIsActive(Guid id);
 }
