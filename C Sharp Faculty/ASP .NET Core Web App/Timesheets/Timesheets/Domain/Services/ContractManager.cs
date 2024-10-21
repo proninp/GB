@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Timesheets.Data.Abstractions;
+﻿using Timesheets.Data.Abstractions;
 using Timesheets.Domain.Abstractions;
 using Timesheets.Models;
 using Timesheets.Models.Dto;
@@ -15,14 +14,14 @@ public class ContractManager : IContractManager
         _conractRepo = conractRepo;
     }
 
-    public Task<Contract?> GetItem(Guid id)
+    public async Task<Contract?> GetItem(Guid id)
     {
-        throw new NotImplementedException();
+        return await _conractRepo.GetItem(id);
     }
 
-    public Task<IEnumerable<Contract>> GetItems()
+    public async Task<IEnumerable<Contract>?> GetItems()
     {
-        throw new NotImplementedException();
+        return await _conractRepo.GetItems();
     }
 
     public async Task<bool?> CheckContractIsActive(Guid id)
@@ -35,9 +34,19 @@ public class ContractManager : IContractManager
         return isActive;
     }
 
-    public Task<Guid> Create(ContractDto sheet)
+    public async Task<Guid> Create(ContractDto contractDto)
     {
-        throw new NotImplementedException();
+        var contract = new Contract()
+        { 
+            Id = Guid.NewGuid(),
+            Title = contractDto.Title,
+            Description = contractDto.Description,
+            DateStart = contractDto.DateStart,
+            DateEnd = contractDto.DateEnd,
+            IsDeleted = contractDto.IsDeleted
+        };
+        await _conractRepo.Add(contract);
+        return contract.Id;
     }
 
     public async Task<bool?> Update(Guid id, ContractDto contractDto)
@@ -45,7 +54,7 @@ public class ContractManager : IContractManager
         var contract = await _conractRepo.GetItem(id);
         if (contract is null)
             return null;
-        
+
         contract.Title = contractDto.Title;
         contract.Description = contractDto.Description;
         contract.DateStart = contractDto.DateStart;
