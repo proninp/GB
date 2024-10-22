@@ -17,52 +17,54 @@ public class PersonsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Person> GetPersonById(int id)
+    public async Task<ActionResult<Person>> GetPersonById(Guid id)
     {
-        var result = _personManager.GetPerson(id);
+        var result = await _personManager.GetPerson(id);
         if (result is null)
             return NotFound();
         return Ok(result);
     }
 
     [HttpGet("search")]
-    public ActionResult<List<Person>> GetPersonBySearchTerm(string term)
+    public async Task<ActionResult<List<Person>>> GetPersonBySearchTerm(string term)
     {
-        var result = _personManager.GetPerson(term);
+        var result = await _personManager.GetPerson(term);
         if (result is null)
             return NotFound();
         return Ok(result);
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Person>> GetPersons([FromQuery] int skip = 0, [FromQuery] int take = 10)
+    public async Task<ActionResult<IEnumerable<Person>>> GetPersons([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
         if (take <= 0 || skip < 0)
             return BadRequest("Take parameter must be greater than 0.");
-        var persons = _personManager.GetPersons(skip, take);
+        var persons = await _personManager.GetPersons(skip, take);
         if (persons is null)
             return NotFound();
         return Ok(persons);
     }
 
     [HttpPost]
-    public ActionResult<int> AddPerson(PersonDto person)
+    public async Task<ActionResult<int>> AddPerson([FromBody] PersonDto person)
     {
-        return Ok(_personManager.Create(person));
+        return Ok(await _personManager.Create(person));
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdatePerson(int id, [FromBody] PersonDto personDto)
+    public async Task<IActionResult> UpdatePerson([FromRoute] Guid id, [FromBody] PersonDto personDto)
     {
-        if (!_personManager.Update(id, personDto))
+        var result = await _personManager.Update(id, personDto);
+        if (result is null)
             return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeletePerson(int id)
+    public async Task<IActionResult> DeletePerson([FromRoute] Guid id)
     {
-        if (!_personManager.Delete(id))
+        var result = await _personManager.Delete(id);
+        if (result is null)
             return NotFound();
         return NoContent();
     }

@@ -14,61 +14,57 @@ public class PersonManager : IPersonManager
         _personRepo = personRepo;
     }
 
-    public int Create(PersonDto personDto)
+    public async Task<PersonDto?> GetPerson(Guid id)
     {
-        var newId = _personRepo.GetLast() + 1;
+        var person = await _personRepo.GetItem(id);
+        return person?.ToDto();
+    }
+
+    public async Task<PersonDto?> GetPerson(string searchTerm)
+    {
+        var person = await _personRepo.GetItem(searchTerm);
+        return person?.ToDto();
+    }
+
+    public async Task<IEnumerable<PersonDto>?> GetPersons(int skip, int take)
+    {
+        var persons = await _personRepo.GetItems(skip, take);
+        return persons?.Select(person => person.ToDto());
+    }
+
+    public async Task<Guid> Create(PersonDto personDto)
+    {
         var person = new Person
         {
-            Id = newId,
+            Id = Guid.NewGuid(),
             FirstName = personDto.FirstName,
             LastName = personDto.LastName,
             Email = personDto.Email,
             Company = personDto.Company,
             Age = personDto.Age
         };
-        _personRepo.Add(person);
+        await _personRepo.Add(person);
         return person.Id;
     }
 
-    public bool Delete(int id)
+    public async Task<bool?> Update(Guid id, PersonDto personDto)
     {
-        var person = _personRepo.GetItem(id);
-        if (person is null)
-            return false;
-        _personRepo.Delete(person);
-        return true;
+        var person = new Person
+        {
+            Id = id,
+            FirstName = personDto.FirstName,
+            LastName = personDto.LastName,
+            Email = personDto.Email,
+            Company = personDto.Company,
+            Age = personDto.Age
+        };
+        return await _personRepo.Update(person);
     }
 
-    public PersonDto? GetPerson(int id)
+    public async Task<bool?> Delete(Guid id)
     {
-        var person = _personRepo.GetItem(id);
-        return person?.ToDto();
-    }
-
-    public PersonDto? GetPerson(string searchTerm)
-    {
-        var person = _personRepo.GetItem(searchTerm);
-        return person?.ToDto();
-    }
-
-    public IEnumerable<PersonDto>? GetPersons(int skip, int take)
-    {
-        var persons = _personRepo.GetItems(skip, take);
-        return persons?.Select(p => p.ToDto());
-    }
-
-    public bool Update(int id, PersonDto personDto)
-    {
-        var person = _personRepo.GetItem(id);
-        if (person is null)
-            return false;
-
-        person.FirstName = personDto.FirstName;
-        person.LastName = personDto.LastName;
-        person.Email = personDto.Email;
-        person.Company = personDto.Company;
-        person.Age = personDto.Age;
-
-        return true;
+        if (await _personRepo.GetItem(id) is null)
+            return null;
+        return await _personRepo.Delete(id);
     }
 }

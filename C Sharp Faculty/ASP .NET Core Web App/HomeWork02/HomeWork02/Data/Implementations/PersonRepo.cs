@@ -1,40 +1,63 @@
 ﻿using HomeWork02.Data.Interfaces;
 using HomeWork02.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeWork02.Data.Implementations;
 
 public class PersonRepo : IPersonRepo
 {
-    private List<Person> _persons;
+    private readonly PersonsDBContext _context;
 
-    public PersonRepo(List<Person> persons)
+    public PersonRepo(PersonsDBContext context)
     {
-        _persons = persons;
+        _context = context;
     }
 
-    public void Add(Person item)
+    public async Task Add(Person item)
     {
-        _persons.Add(item);
+        await _context.AddAsync(item);
+        await _context.SaveChangesAsync();
     }
 
-    public void Delete(Person item)
+    public async Task<Person?> GetItem(Guid id)
     {
-        _persons.Remove(item);
+        return await _context.Persons.FindAsync(id);
     }
 
-    public Person? GetItem(int id)
+    public async Task<Person?> GetItem(string searchTerm)
     {
-        return _persons.FirstOrDefault(p => p.Id == id);
+        return await _context.Persons
+            .FirstOrDefaultAsync(p => p.FirstName.ToLower()
+            .Contains(searchTerm.ToLower()));
     }
 
-    public Person? GetItem(string searchTerm)
+    public async Task<IEnumerable<Person>?> GetItems(int skip, int take)
     {
-        return _persons.FirstOrDefault(p => p.FirstName.ToLower().Contains(searchTerm.ToLower()));
+        return await _context.Persons
+            .Skip(skip).Take(take)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
-    public IEnumerable<Person> GetItems(int skip, int take) =>
-        _persons.Skip(skip).Take(take);
+    public async Task<bool?> Update(Person item)
+    {
+        var person = await _context.Persons.FindAsync(item.Id);
+        if (person is null)
+            return null;
 
-    public int GetLast() =>
-        _persons.Last()?.Id ?? 0;
+        person.FirstName = item.FirstName;
+        person.LastName = item.LastName;
+        person.Email = item.Email;
+        person.Company = item.Company;
+        person.Age = item.Age;
+
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
+    public async Task<bool> Delete(Guid id)
+    {
+        var result = await _context.Persons.Where(p => p.Id == id).ExecuteDeleteAsync();
+        return result > 0;
+    }
 }

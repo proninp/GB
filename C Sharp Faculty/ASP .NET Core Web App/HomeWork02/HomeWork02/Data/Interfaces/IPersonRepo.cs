@@ -4,7 +4,5 @@ namespace HomeWork02.Data.Interfaces;
 
 public interface IPersonRepo : IRepository<Person>
 {
-    Person? GetItem(string searchTerm);
-
-    int GetLast();
+    Task<Person?> GetItem(string searchTerm);
 }

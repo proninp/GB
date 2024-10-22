@@ -2,11 +2,13 @@
 
 public interface IRepository<T>
 {
-    T? GetItem(int id);
+    Task<T?> GetItem(Guid id);
 
-    IEnumerable<T>? GetItems(int skip, int take);
+    Task<IEnumerable<T>?> GetItems(int skip, int take);
 
-    void Add(T item);
+    Task Add(T item);
 
-    void Delete(T item);
+    Task<bool?> Update(T item);
+
+    Task<bool> Delete(Guid id);
 }

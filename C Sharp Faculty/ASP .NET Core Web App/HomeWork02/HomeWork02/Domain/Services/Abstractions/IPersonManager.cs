@@ -4,15 +4,15 @@ namespace HomeWork02.Domain.Services.Abstractions;
 
 public interface IPersonManager
 {
-    PersonDto? GetPerson(int id);
+    Task<PersonDto?> GetPerson(Guid id);
 
-    PersonDto? GetPerson(string searchTerm);
+    Task<PersonDto?> GetPerson(string searchTerm);
 
-    IEnumerable<PersonDto>? GetPersons(int skip, int take);
+    Task<IEnumerable<PersonDto>?> GetPersons(int skip, int take);
 
-    int Create(PersonDto person);
+    Task<Guid> Create(PersonDto person);
 
-    bool Update(int id, PersonDto person);
+    Task<bool?> Update(Guid id, PersonDto person);
 
-    bool Delete(int id);
+    Task<bool?> Delete(Guid id);
 }
