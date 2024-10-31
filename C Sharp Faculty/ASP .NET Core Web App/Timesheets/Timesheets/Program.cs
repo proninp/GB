@@ -6,6 +6,7 @@ using Timesheets.Domain.Abstractions;
 using Timesheets.Domain.Implementations;
 using Timesheets.Domain.InterAbstractionsfaces;
 using Timesheets.Domain.Services;
+using Timesheets.Infrastructure;
 using Timesheets.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,13 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TimesheetsDBContext>();
-
-builder.Services.AddScoped<ISheetRepo, SheetRepo>();
-builder.Services.AddScoped<ISheetManager, SheetManager>();
-builder.Services.AddScoped<IContractRepo, ContractRepo>();
-builder.Services.AddScoped<IContractManager, ContractManager>();
-
+builder.Services.AddApplication(builder.Configuration);
 
 var app = builder.Build();
 

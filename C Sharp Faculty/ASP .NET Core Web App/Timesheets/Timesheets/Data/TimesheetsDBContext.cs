@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Timesheets.Data.Configurations;
 using Timesheets.Models;
 using Timesheets.Options;
 
@@ -28,23 +29,12 @@ public class TimesheetsDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Client>().ToTable(nameof(Clients));
-        modelBuilder.Entity<Contract>().ToTable(nameof(Contracts));
-        modelBuilder.Entity<Employee>().ToTable(nameof(Employees));
-        modelBuilder.Entity<Service>().ToTable(nameof(Services));
-        modelBuilder.Entity<User>().ToTable(nameof(Users));
-
-        modelBuilder.Entity<Sheet>().HasOne(sheet => sheet.Contract)
-            .WithMany(contract => contract.Sheets)
-            .HasForeignKey(nameof(Sheet.ContractId));
-
-        modelBuilder.Entity<Sheet>().HasOne(sheet => sheet.Employee)
-            .WithMany(employee => employee.Sheets)
-            .HasForeignKey(nameof(Sheet.EmployeeId));
-
-        modelBuilder.Entity<Sheet>().HasOne(sheet => sheet.Service)
-            .WithMany(services => services.Sheets)
-            .HasForeignKey(nameof(Sheet.ServiceId));
+        modelBuilder.ApplyConfiguration(new ClientConfiguration(nameof(Clients)));
+        modelBuilder.ApplyConfiguration(new ContractConfiguration(nameof(Contracts)));
+        modelBuilder.ApplyConfiguration(new EmployeeConfiguration(nameof(Employees)));
+        modelBuilder.ApplyConfiguration(new ServiceConfiguration(nameof(Services)));
+        modelBuilder.ApplyConfiguration(new UserConfiguration(nameof(Users)));
+        modelBuilder.ApplyConfiguration(new SheetConfiguration(nameof(Sheets)));
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
