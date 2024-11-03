@@ -1,14 +1,14 @@
 ﻿namespace Timesheets.Domain.Abstractions;
 
-public interface IManager<T, TPk, TDto>
+public interface IManager<TGet, TPk, TGetDto, TCreateDto>
 {
-    Task<T?> GetItem(TPk id);
+    Task<TGet?> GetItem(TPk id);
 
-    Task<IEnumerable<T>?> GetItems();
+    Task<IEnumerable<TGet>?> GetItems();
 
-    Task<TPk> Create(TDto item);
+    Task<TPk> Create(TCreateDto item);
 
-    Task<bool?> Update(TPk id, TDto itemDto);
+    Task<bool?> Update(TPk id, TGetDto itemDto);
 
     Task<bool?> Delete(TPk id);
 }

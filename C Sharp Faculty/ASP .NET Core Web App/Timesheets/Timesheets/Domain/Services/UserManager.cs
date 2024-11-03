@@ -2,6 +2,8 @@
 using Timesheets.Domain.Abstractions;
 using Timesheets.Models;
 using Timesheets.Models.Dto;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Timesheets.Domain.Services;
 
@@ -24,13 +26,23 @@ public class UserManager : IUserManager
         return await _userRepo.GetItems();
     }
 
-    public async Task<Guid> Create(UserDto userDto)
+    public async Task<User?> GetUser(LoginRequest request)
+    {
+        var passwordHash = GetPasswordHash(request.Password);
+        var user = await _userRepo.GetByLoginAndPasswordHash(request.Login, passwordHash);
+        return user;
+    }
+
+    public async Task<Guid> Create(CreateUserDto userDto)
     {
         var user = new User
-        {
+        { 
             Id = Guid.NewGuid(),
-            Username = userDto.Username
+            UserName = userDto.UserName,
+            PasswordHash = GetPasswordHash(userDto.Password),
+            Role = userDto.Role
         };
+
         await _userRepo.Add(user);
         return user.Id;
     }
@@ -41,7 +53,7 @@ public class UserManager : IUserManager
         if (user is null)
             return null;
 
-        user.Username = userDto.Username;
+        user.UserName = userDto.UserName;
         return await _userRepo.Update(user);
     }
 
@@ -52,5 +64,11 @@ public class UserManager : IUserManager
             return null;
 
         return await _userRepo.Delete(id);
+    }
+
+    private byte[] GetPasswordHash(string password)
+    {
+        using var sha1 = new SHA1CryptoServiceProvider();
+        return sha1.ComputeHash(Encoding.Unicode.GetBytes(password));
     }
 }

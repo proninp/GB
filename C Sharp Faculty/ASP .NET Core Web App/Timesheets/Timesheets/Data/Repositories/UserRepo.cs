@@ -29,6 +29,13 @@ public class UserRepo : IUserRepo
             .ToListAsync();
     }
 
+    public async Task<User?> GetByLoginAndPasswordHash(string login, byte[] passwordHash)
+    {
+        return await _context.Users
+            .Where(x => x.UserName == login && x.PasswordHash == passwordHash)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task Add(User item)
     {
         _context.Add(item);
