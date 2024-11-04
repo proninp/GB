@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Timesheets.Domain.Abstractions;
 using Timesheets.Domain.InterAbstractionsfaces;
 using Timesheets.Models.Dto;
@@ -27,6 +28,7 @@ public class SheetsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "user")]
     [HttpGet]
     public async Task<IActionResult> Get()
     {

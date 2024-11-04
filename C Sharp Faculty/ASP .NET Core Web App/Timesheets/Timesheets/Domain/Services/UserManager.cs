@@ -4,6 +4,7 @@ using Timesheets.Models;
 using Timesheets.Models.Dto;
 using System.Security.Cryptography;
 using System.Text;
+using Timesheets.Infrastructure.Extensions;
 
 namespace Timesheets.Domain.Services;
 
@@ -33,14 +34,16 @@ public class UserManager : IUserManager
         return user;
     }
 
-    public async Task<Guid> Create(CreateUserDto userDto)
+    public async Task<Guid> Create(CreateUserDto userRequestDto)
     {
+        userRequestDto.EnsureNotNull(nameof(userRequestDto));
+
         var user = new User
         { 
             Id = Guid.NewGuid(),
-            UserName = userDto.UserName,
-            PasswordHash = GetPasswordHash(userDto.Password),
-            Role = userDto.Role
+            UserName = userRequestDto.UserName,
+            PasswordHash = GetPasswordHash(userRequestDto.Password),
+            Role = userRequestDto.Role
         };
 
         await _userRepo.Add(user);

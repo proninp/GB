@@ -1,12 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Timesheets.Data;
-using Timesheets.Data.Abstractions;
-using Timesheets.Data.Repositories;
-using Timesheets.Domain.Abstractions;
-using Timesheets.Domain.Implementations;
-using Timesheets.Domain.InterAbstractionsfaces;
-using Timesheets.Domain.Services;
-using Timesheets.Infrastructure;
+using Timesheets.Infrastructure.Extensions;
 using Timesheets.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext();
-builder.Services.AddRepositoris();
-builder.Services.AddDomainManagers();
+builder.Services.ConfigureDbContext();
+builder.Services.ConfigureAuthentication(builder.Configuration);
+builder.Services.ConfigureRepositoris();
+builder.Services.ConfigureDomainManagers();
+builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
